@@ -1,6 +1,14 @@
 //import Image from "next/image";
 
+import ShowCard from "@/components/ShowCard";
+import { ShowCardProps } from "@/components/ShowCard";
+
 export default function Home() {
+
+  const shows: ShowCardProps[] = [
+    { title: "Some Show", description: "A description", imageUrl: "/show1.jpg" },
+    { title: "Some Other Show", description: "A description", imageUrl: "/show2.jpg" },
+  ]
 
   return (
     <div>
@@ -9,19 +17,13 @@ export default function Home() {
       <p>filters</p>
 
       <div>
-        <p>------------</p>
-        <div className="flex gap-2">
-          <p>headline</p>
-          <p>flyer img</p>
-        </div>
-      </div>
-
-      <div>
-        <p>------------</p>
-        <div className="flex gap-2">
-          <p>headline</p>
-          <p>flyer img</p>
-        </div>
+        {shows.map((show, index) => (
+          <ShowCard
+            key={index}
+            title={show.title}
+            description={show.description}
+            imageUrl={show.imageUrl} />
+        ))}
       </div>
     </div>
   );
