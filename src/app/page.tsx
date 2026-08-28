@@ -5,16 +5,17 @@ import { ShowCardProps } from "@/components/ShowCard";
 
 export default function Home() {
 
+  //test data
   const shows: ShowCardProps[] = [
     {
       title: "The Great Silence", supportingbands: "w/ Inimiscus, Seasonless, and Moon Traveler Deluxe",
       description: "Tour with Inimiscus kick-off show!", imageUrl: "/thegreatsilence.jpg",
-      venue: "Urban Lounge", date: "10-01-2026"
+      venue: "Urban Lounge", city: 'Salt Lake City', date: "10-01-2026", genre: 'metal'
     },
     {
       title: "Mastodon", supportingbands: "Deafheaven, Alcest",
       description: "A description", imageUrl: "/mastodon.jpg",
-      venue: "The Complex", date: "10-06-2026"
+      venue: "The Complex", city: 'Salt Lake City', date: "10-06-2026", genre: 'metal'
     },
   ]
 
@@ -32,8 +33,10 @@ export default function Home() {
             supportingbands={show.supportingbands}
             description={show.description}
             imageUrl={show.imageUrl}
-            venue={show.venue}
+            venue={`${show.venue},`}
+            city={show.city}
             date={show.date}
+            genre={show.genre}
           />
         ))}
       </div>

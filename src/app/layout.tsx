@@ -25,7 +25,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col items-center">
-        <header>FUCK THE ALGORITHYM</header>
+        <header>FUCK THE ALGORITHM</header>
         <NavBar />
         <section className="w-full max-w-5xl px-10">{children}</section>
       </body>
