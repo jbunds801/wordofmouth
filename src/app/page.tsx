@@ -1,12 +1,12 @@
 //import Image from "next/image";
 
 import ShowCard from "@/components/ShowCard";
-import { ShowCardProps } from "@/components/ShowCard";
+import type { Show } from '@/types/show'
 
 export default function Home() {
 
   //test data
-  const shows: ShowCardProps[] = [
+  const shows: Show[] = [
     {
       title: "The Great Silence", supportingbands: "w/ Inimiscus, Seasonless, and Moon Traveler Deluxe",
       description: "Tour with Inimiscus kick-off show!", imageUrl: "/thegreatsilence.jpg",

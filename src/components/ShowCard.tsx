@@ -1,18 +1,8 @@
-import React from 'react'
 import Image from "next/image"
+import type { Show } from '@/types/show'
 
-export type ShowCardProps = {
-    title: string;
-    supportingbands?: string;
-    description?: string;
-    imageUrl: string;
-    venue: string;
-    city: string;
-    date: string;
-    genre: string;
-}
 
-const ShowCard = ({ title, supportingbands, description, imageUrl, venue, city, date, genre }: ShowCardProps) => {
+const ShowCard = ({ title, supportingbands, description, imageUrl, venue, city, date, genre }: Show) => {
     return (
         <div>
             <article className='border-2 rounded-md max-w-2xl mx-auto aspect-5/4 my-10'>
