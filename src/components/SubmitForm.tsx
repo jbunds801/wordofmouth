@@ -1,11 +1,12 @@
 'use client'
 
 import React, { useState } from 'react'
+import type { Show } from '@/types/show'
 
 const genres = ['Rock', 'Metal', 'Indie', 'Hip-Hop']
 
 const SubmitForm = () => {
-    const [form, setForm] = useState({
+    const [form, setForm] = useState<Show>({
         title: '',
         supportingbands: '',
         description: '',
@@ -13,15 +14,39 @@ const SubmitForm = () => {
         venue: '',
         city: '',
         date: '',
+        time: '',
         genre: '',
     })
+    const [imageError, setImageError] = useState('')
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         setForm({ ...form, [e.target.name]: e.target.value })
+
+        if (e.target.name === 'imageUrl') {
+            setImageError('')
+        }
+    }
+
+    const handleImageFile = (file?: File) => {
+        if (!file) return
+
+        setForm({ ...form, imageFile: file })
+        setImageError('')
+    }
+
+    const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault()
+        handleImageFile(e.dataTransfer.files[0])
     }
 
     const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault()
+
+        if (!form.imageUrl && !form.imageFile) {
+            setImageError('Add an image URL or drop an image file.')
+            return
+        }
+
         console.log(form)
     }
 
@@ -40,8 +65,26 @@ const SubmitForm = () => {
                 <textarea id="description" name="description" value={form.description} onChange={handleChange} />
             </div>
             <div>
-                <label htmlFor="imageUrl">Image URL *</label>
-                <input id="imageUrl" name="imageUrl" type="url" required value={form.imageUrl} onChange={handleChange} />
+                <div
+                    className="border-2 border-dashed rounded-md p-6 text-center"
+                    onDragOver={(e) => e.preventDefault()}
+                    onDrop={handleDrop}
+                >
+                    <label htmlFor="imageFile">Drop an image here, or choose an image</label>
+                    <input
+                        id="imageFile"
+                        name="imageFile"
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => handleImageFile(e.target.files?.[0])}
+                    />
+                    {form.imageFile && <p>Selected: {form.imageFile.name}</p>}
+                </div>
+                {imageError && <p role="alert">{imageError}</p>}
+            </div>
+            <div>
+                <label htmlFor="imageUrl">Image URL (optional)</label>
+                <input id="imageUrl" name="imageUrl" type="url" value={form.imageUrl} onChange={handleChange} />
             </div>
             <div>
                 <label htmlFor="venue">Venue *</label>
@@ -54,6 +97,10 @@ const SubmitForm = () => {
             <div>
                 <label htmlFor="date">Date *</label>
                 <input id="date" name="date" type="date" required value={form.date} onChange={handleChange} />
+            </div>
+            <div>
+                <label htmlFor="time">Time *</label>
+                <input id="time" name="time" type="time" required value={form.time} onChange={handleChange} />
             </div>
             <div>
                 <label htmlFor="genre">Genre *</label>
