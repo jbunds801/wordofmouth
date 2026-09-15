@@ -47,18 +47,7 @@ export default function AdminPage() {
                 <div className="flex flex-col gap-6">
                     {pendingShows.map((show) => (
                         <div key={show.id}>
-                            <ShowCard
-                                title={show.title}
-                                supportingbands={show.supportingbands}
-                                description={show.description}
-                                imageUrl={show.imageUrl}
-                                imageFile={show.imageFile}
-                                venue={show.venue}
-                                city={show.city}
-                                date={show.date}
-                                time={show.time}
-                                genre={show.genre}
-                            />
+                            <ShowCard {...show} />
                             <div className="flex justify-center gap-4">
                                 <button
                                     type="button"
