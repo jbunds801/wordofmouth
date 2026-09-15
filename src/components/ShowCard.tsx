@@ -27,7 +27,7 @@ const ShowCard = ({ title, supportingbands, description, imageUrl, imageFile, ve
                         <p className='text-s sm:text-base'>{description}</p>
 
                         <div className='pt-5'>
-                            <p className='text-s sm:text-base'> <span className='font-semibold'>Where:</span> {venue}</p>
+                            <p className='text-s sm:text-base'> <span className='font-semibold'>Where:</span> {venue},</p>
                             <p className='text-s sm:text-base'>{city}</p>
                             <p className='text-s sm:text-base'><span className='font-semibold'>When:</span> {date}</p>
                             <p className='text-s sm:text-base'><span className='font-semibold'>Time:</span> {time}</p>

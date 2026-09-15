@@ -27,18 +27,7 @@ export default function Home() {
 
       <div>
         {shows.map((show, index) => (
-          <ShowCard
-            key={index}
-            title={show.title}
-            supportingbands={show.supportingbands}
-            description={show.description}
-            imageUrl={show.imageUrl}
-            venue={`${show.venue},`}
-            city={show.city}
-            date={show.date}
-            time={show.time}
-            genre={show.genre}
-          />
+          <ShowCard key={index} {...show} />
         ))}
       </div>
     </div>
