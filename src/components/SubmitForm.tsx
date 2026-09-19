@@ -1,12 +1,12 @@
 'use client'
 
 import React, { useState } from 'react'
-import type { Show } from '@/types/show'
+import type { ShowForm } from '@/types/show'
 
 const genres = ['Rock', 'Metal', 'Indie', 'Hip-Hop']
 
 const SubmitForm = () => {
-    const [form, setForm] = useState<Show>({
+    const [form, setForm] = useState<ShowForm>({
         title: '',
         supportingbands: '',
         description: '',

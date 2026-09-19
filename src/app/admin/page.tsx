@@ -38,7 +38,7 @@ export default function AdminPage() {
     }
 
     return (
-        <main className="p-8">
+        <main>
             <h1 className="text-2xl font-bold mb-6">Admin Dashboard — Pending Shows</h1>
 
             {pendingShows.length === 0 ? (

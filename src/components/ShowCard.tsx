@@ -1,22 +1,7 @@
-'use client'
-
-import { useEffect, useRef } from 'react'
 import Image from "next/image"
 import type { Show } from '@/types/show'
 
-
-const ShowCard = ({ title, supportingbands, description, imageUrl, imageFile, venue, city, date, time, genre }: Show) => {
-    const uploadedImageRef = useRef<HTMLImageElement>(null)
-
-    useEffect(() => {
-        if (!imageFile || !uploadedImageRef.current) return
-
-        const objectUrl = URL.createObjectURL(imageFile)
-        uploadedImageRef.current.src = objectUrl
-
-        return () => URL.revokeObjectURL(objectUrl)
-    }, [imageFile])
-
+const ShowCard = ({ title, supportingbands, description, imageUrl, venue, city, date, time, genre }: Show) => {
     return (
         <div>
             <article className='border-2 rounded-md max-w-2xl mx-auto aspect-5/4 my-10'>
@@ -42,14 +27,6 @@ const ShowCard = ({ title, supportingbands, description, imageUrl, imageFile, ve
                                 loading="eager"
                                 fill
                                 src={imageUrl}
-                                alt={`${title} image`}
-                            />
-                        ) : imageFile ? (
-                            // A local File uses a temporary browser URL, which Next.js cannot optimize.
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img
-                                ref={uploadedImageRef}
-                                className='object-contain object-top h-full w-full'
                                 alt={`${title} image`}
                             />
                         ) : (
