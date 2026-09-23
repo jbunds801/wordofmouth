@@ -12,10 +12,10 @@ const ShowCard = ({ title, supportingbands, description, imageUrl, venue, city, 
 
                         <div className='pt-5'>
                             <p className='text-s sm:text-base'> <span className='font-semibold'>Where:</span> {venue},</p>
-                            <p className='text-s sm:text-base'>{city}</p>
-                            <p className='text-s sm:text-base'><span className='font-semibold'>When:</span> {date}</p>
-                            <p className='text-s sm:text-base'><span className='font-semibold'>Time:</span> {time}</p>
-                            <p>{genre}</p>
+                            <p className='text-s sm:text-base pb-2'>{city}</p>
+                            <p className='text-s sm:text-base pb-2'><span className='font-semibold'>When:</span> {date}</p>
+                            <p className='text-s sm:text-base pb-2'><span className='font-semibold'>Time:</span> {time}</p>
+                            <p className='font-semibold'>{genre}</p>
                         </div>
                     </div>
 
