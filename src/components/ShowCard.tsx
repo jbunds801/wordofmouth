@@ -1,4 +1,3 @@
-import Image from "next/image"
 import type { Show } from '@/types/show'
 
 const ShowCard = ({ title, supportingbands, description, imageUrl, venue, city, date, time, genre }: Show) => {
@@ -22,10 +21,12 @@ const ShowCard = ({ title, supportingbands, description, imageUrl, venue, city, 
 
                     <div className='relative w-2/3'>
                         {imageUrl ? (
-                            <Image
-                                className='object-contain object-top'
-                                loading="eager"
-                                fill
+                            // User-provided URLs cannot be allowlisted for next/image, 
+                            // added one-line eslint suppression
+
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img
+                                className="h-full w-full object-contain object-top"
                                 src={imageUrl}
                                 alt={`${title} image`}
                             />
