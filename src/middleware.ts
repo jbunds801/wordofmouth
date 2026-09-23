@@ -8,7 +8,10 @@ export function middleware(req: NextRequest) {
     const base64 = authHeader.split(" ")[1] || "";
     const [user, password] = atob(base64).split(":");
 
-    if (user === process.env.ADMIN_USER && password === process.env.ADMIN_PASSWORD) {
+    if (
+      user === process.env.ADMIN_USER &&
+      password === process.env.ADMIN_PASSWORD
+    ) {
       return NextResponse.next();
     }
   }
@@ -21,5 +24,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: ["/admin/:path*", "/api/shows/:id"],
 };
