@@ -1,6 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export function middleware(req: NextRequest) {
+  const isPendingShowsRequest =
+    req.nextUrl.pathname === "/api/shows" &&
+    req.nextUrl.searchParams.get("approved") === "false";
+
+  if (!req.nextUrl.pathname.startsWith("/admin") && !isPendingShowsRequest) {
+    return NextResponse.next();
+  }
+
   const authHeader = req.headers.get("authorization");
 
   if (authHeader) {
@@ -24,5 +32,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/api/shows/:id"],
+  matcher: ["/admin/:path*", "/api/shows", "/api/shows/:id"],
 };
