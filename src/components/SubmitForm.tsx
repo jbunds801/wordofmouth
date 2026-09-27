@@ -27,8 +27,20 @@ const SubmitForm = () => {
         }
     }
 
+    const MAX_IMAGE_SIZE = 10 * 1024 * 1024
+
     const handleImageFile = (file?: File) => {
         if (!file) return
+
+        if (!file.type.startsWith('image/')) {
+            setImageError('Only image files are allowed.')
+            return
+        }
+
+        if (file.size > MAX_IMAGE_SIZE) {
+            setImageError('The image must be smaller than 10MB.')
+            return
+        }
 
         setForm({ ...form, imageFile: file })
         setImageError('')
@@ -39,7 +51,7 @@ const SubmitForm = () => {
         handleImageFile(e.dataTransfer.files[0])
     }
 
-    const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault()
 
         if (!form.imageUrl && !form.imageFile) {
@@ -47,7 +59,64 @@ const SubmitForm = () => {
             return
         }
 
-        console.log(form)
+        let imageUrl = form.imageUrl
+
+        if (form.imageFile) {
+            const uploadData = new FormData()
+            uploadData.append('imageFile', form.imageFile)
+
+            const uploadResponse = await fetch('/api/uploads', {
+                method: 'POST',
+                body: uploadData,
+            })
+
+            const uploadResult = await uploadResponse.json()
+
+            if (!uploadResponse.ok) {
+                setImageError(uploadResult.error ?? 'Image upload failed.')
+                return
+            }
+
+            imageUrl = uploadResult.imageUrl
+
+        }
+
+        console.log(imageUrl)
+
+        const response = await fetch('/api/shows', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                ...form,
+                imageFile: undefined,
+                imageUrl,
+            }),
+        })
+
+        const result = await response.json()
+
+        if (!response.ok) {
+            setImageError(result.error ?? 'Show submission failed.')
+            return
+        }
+
+        e.currentTarget.reset()
+        setForm({
+            title: '',
+            supportingbands: '',
+            description: '',
+            imageUrl: '',
+            venue: '',
+            city: '',
+            date: '',
+            time: '',
+            genre: '',
+        })
+        setImageError('')
+
+        console.log('Show submitted:', result)
     }
 
     return (

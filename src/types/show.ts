@@ -11,5 +11,9 @@ export type Show = {
 };
 
 export type ShowForm = Show & {
-    imageFile?: File
-}
+  imageFile?: File;
+};
+
+export type PendingShow = Show & {
+  id: string;
+};

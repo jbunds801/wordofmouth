@@ -1,41 +1,41 @@
 'use client'
 
-import React, { useState } from 'react'
-import ShowCard from '@/components/ShowCard'
-import type { Show } from '@/types/show'
+import { useEffect, useState } from 'react'
+import PendingShowCard from '@/components/PendingShowCard'
+import type { PendingShow } from '@/types/show'
 
-type PendingShow = Show & {
-    id: string
-}
-
-// Temporary test data until database is connected
-const initialPendingShows: PendingShow[] = [
-    {
-        id: '1',
-        title: 'The Great Silence',
-        supportingbands: 'Inimiscus, Seasonless',
-        description: 'Tour kick-off show',
-        imageUrl: '/thegreatsilence.jpg',
-        venue: 'Urban Lounge',
-        city: 'Salt Lake City',
-        date: '2026-10-01',
-        time: '21:00',
-        genre: 'Metal',
-    },
-]
 
 export default function AdminPage() {
-    const [pendingShows, setPendingShows] = useState<PendingShow[]>(initialPendingShows)
+    const [pendingShows, setPendingShows] = useState<PendingShow[]>([])
 
-    const handleApprove = (id: string) => {
-        // Will update approved = true in Postgres later
-        setPendingShows(pendingShows.filter(show => show.id !== id))
+    const handleApprove = async (id: string) => {
+        const response = await fetch(`/api/shows/${id}`, {
+            method: 'PATCH',
+        })
+
+        if (!response.ok) {
+            return
+        }
+        setPendingShows(((shows) => shows.filter
+            ((show) => show.id !== id)))
     }
 
     const handleReject = (id: string) => {
         // Will delete from Postgres later
         setPendingShows(pendingShows.filter(show => show.id !== id))
     }
+
+    useEffect(() => {
+        async function loadPendingShows() {
+            const response = await fetch('/api/shows?approved=false')
+            const shows = await response.json()
+            if (response.ok) {
+                setPendingShows(shows)
+            }
+        }
+
+        loadPendingShows()
+    }, [])
 
     return (
         <main>
@@ -46,25 +46,12 @@ export default function AdminPage() {
             ) : (
                 <div className="flex flex-col gap-6">
                     {pendingShows.map((show) => (
-                        <div key={show.id}>
-                            <ShowCard {...show} />
-                            <div className="flex justify-center gap-4">
-                                <button
-                                    type="button"
-                                    onClick={() => handleApprove(show.id)}
-                                    className="border px-4 py-1"
-                                >
-                                    Approve
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={() => handleReject(show.id)}
-                                    className="border px-4 py-1"
-                                >
-                                    Reject
-                                </button>
-                            </div>
-                        </div>
+                        <PendingShowCard
+                            key={show.id}
+                            show={show}
+                            onApprove={handleApprove}
+                            onReject={handleReject}
+                        />
                     ))}
                 </div>
             )}

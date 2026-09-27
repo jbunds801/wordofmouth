@@ -1,23 +1,27 @@
 //import Image from "next/image";
 
+import { sql } from '@/lib/db'
 import ShowCard from "@/components/ShowCard";
 import type { Show } from '@/types/show'
 
-export default function Home() {
 
-  //test data
-  const shows: Show[] = [
-    {
-      title: "The Great Silence", supportingbands: "w/ Inimicus, Seasonless, and Moon Traveler Deluxe",
-      description: "Tour with Inimicus kick-off show!", imageUrl: "/thegreatsilence.jpg",
-      venue: "Urban Lounge", city: 'Salt Lake City', date: "10-01-2026", time: "9 PM", genre: 'metal'
-    },
-    {
-      title: "Mastodon", supportingbands: "Deafheaven, Alcest",
-      description: "A description", imageUrl: "/mastodon.jpg",
-      venue: "The Complex", city: 'Salt Lake City', date: "10-06-2026", time: "9 PM", genre: 'metal'
-    },
-  ]
+export default async function Home() {
+  const shows = await sql`
+    SELECT
+      id,
+      title,
+      supporting_bands AS supportingbands,
+      description,
+      image_url AS "imageUrl",
+      venue,
+      city,
+      TO_CHAR(date, 'YYYY-MM-DD') AS date,
+      TO_CHAR(time, 'HH24:MI') AS time,
+      genre
+    FROM shows
+    WHERE approved = true
+    ORDER BY date, time
+  ` as Array<Show & { id: string }>
 
   return (
     <div>
@@ -26,10 +30,10 @@ export default function Home() {
       <p>filters</p>
 
       <div>
-        {shows.map((show, index) => (
-          <ShowCard key={index} {...show} />
+        {shows.map((show) => (
+          <ShowCard key={show.id} {...show} />
         ))}
       </div>
     </div>
-  );
+  )
 }
