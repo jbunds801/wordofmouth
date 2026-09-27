@@ -4,9 +4,14 @@ import type { Show } from "@/types/show";
 export async function GET(request: Request) {
   const approved = new URL(request.url).searchParams.get("approved");
 
-  if (approved !== "true") {
-    return Response.json({ error: "Use approved=true." }, { status: 400 });
+	if (approved !== "true" && approved !== "false") {
+		return Response.json(
+			{ error: "Use approved=true or approved=false." },
+			{ status: 400 },
+		);
   }
+
+	const approvedValue = approved === "true";
 
   const shows = await sql`
 		SELECT
@@ -22,7 +27,7 @@ export async function GET(request: Request) {
 			genre,
 			approved
 		FROM shows
-		WHERE approved = true
+		WHERE approved = ${approvedValue}
 		ORDER BY date, time
 	`;
 
