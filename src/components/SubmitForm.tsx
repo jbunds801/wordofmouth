@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import type { ShowForm } from '@/types/show'
 
 const genres = ['Rock', 'Metal', 'Punk', 'Indie', 'Hip-Hop']
@@ -17,8 +17,20 @@ const SubmitForm = () => {
         time: '',
         genre: '',
     })
-    const [imageError, setImageError] = useState('')
-    const [submitMessage, setSubmitMessage] = useState('')
+    const [imageError, setImageError] = useState<string>('')
+    const [submitMessage, setSubmitMessage] = useState<string>('')
+    const [preview, setPreview] = useState<string | null>(null)
+
+    useEffect(() => {
+        if (!form.imageFile) {
+            setPreview(null)
+            return
+        }
+        const objectUrl = URL.createObjectURL(form.imageFile)
+        setPreview(objectUrl)
+
+        return () => URL.revokeObjectURL(objectUrl)
+    }, [form.imageFile])
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         setForm({ ...form, [e.target.name]: e.target.value })
@@ -106,7 +118,7 @@ const SubmitForm = () => {
             return
         }
 
-        setSubmitMessage('Show submitted for approval!')
+        setSubmitMessage('Show submitted for approval!\nShow will post in 24-48 hours.')
 
         formElement.reset()
         setForm({
@@ -235,7 +247,7 @@ const SubmitForm = () => {
 
                 <div className='w-2/3 pl-5'>
                     <div
-                        className="border-2 border-dashed rounded-md p-6 text-center"
+                        className="relative border-2 border-dashed rounded-md p-6 text-center"
                         onDragOver={(e) => e.preventDefault()}
                         onDrop={handleDrop}
                     >
@@ -248,6 +260,17 @@ const SubmitForm = () => {
                             onChange={(e) => handleImageFile(e.target.files?.[0])}
                             className='h-80'
                         />
+                        {(preview || form.imageUrl) && (
+                            // User-provided URLs cannot be allowlisted for next/image, 
+                            // added one-line eslint suppression
+
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img
+                                src={preview || form.imageUrl}
+                                alt='Uploaded Show Flyer Preview'
+                                className='pointer-events-none absolute inset-0 z-0 h-full object-contain mx-auto p-3'
+                            />
+                        )}
                         {form.imageFile && <p className='text-s sm:text-base'>Selected: {form.imageFile.name}</p>}
                     </div>
                     {imageError && <p role="alert">{imageError}</p>}
@@ -268,12 +291,12 @@ const SubmitForm = () => {
                 </div>
             </div>
 
-
             <div className='flex justify-end mx-3'>
                 <button type="submit" className='border-2 rounded-xl p-1 mb-3'>Submit</button>
             </div>
+
             <div className='flex justify-center'>
-                {submitMessage && <p className='text-red-600 font-bold mb-3' role="status">{submitMessage}</p>}
+                {submitMessage && <p className='text-red-600 font-bold mb-3 whitespace-pre-line' role="status">{submitMessage}</p>}
             </div>
         </form>
     )
