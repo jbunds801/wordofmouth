@@ -18,6 +18,7 @@ const SubmitForm = () => {
         genre: '',
     })
     const [imageError, setImageError] = useState('')
+    const [submitMessage, setSubmitMessage] = useState('')
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         setForm({ ...form, [e.target.name]: e.target.value })
@@ -48,11 +49,14 @@ const SubmitForm = () => {
 
     const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
         e.preventDefault()
+        setSubmitMessage('')
+
         handleImageFile(e.dataTransfer.files[0])
     }
 
     const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault()
+        const formElement = e.currentTarget
 
         if (!form.imageUrl && !form.imageFile) {
             setImageError('Add an image URL or drop an image file.')
@@ -102,7 +106,9 @@ const SubmitForm = () => {
             return
         }
 
-        e.currentTarget.reset()
+        setSubmitMessage('Show submitted for approval!')
+
+        formElement.reset()
         setForm({
             title: '',
             supportingbands: '',
@@ -262,8 +268,12 @@ const SubmitForm = () => {
                 </div>
             </div>
 
+
             <div className='flex justify-end mx-3'>
                 <button type="submit" className='border-2 rounded-xl p-1 mb-3'>Submit</button>
+            </div>
+            <div className='flex justify-center'>
+                {submitMessage && <p className='text-red-600 font-bold mb-3' role="status">{submitMessage}</p>}
             </div>
         </form>
     )

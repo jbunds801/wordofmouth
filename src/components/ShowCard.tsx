@@ -1,6 +1,27 @@
 import type { Show } from '@/types/show'
 
 const ShowCard = ({ title, supportingbands, description, imageUrl, venue, city, date, time, genre }: Show) => {
+
+    const formatDate = (date: string) => {
+        const [year, month, day] = date.split('-').map(Number)
+
+        return new Intl.DateTimeFormat
+            ('en-US', {
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric',
+                timeZone: 'UTC',
+            }).format(new Date(Date.UTC(year, month - 1, day)))
+    }
+
+    const formatTime = (time: string) => {
+        const [hourText, minute] = time.split(':')
+        const hour = Number(hourText)
+        const period = hour >= 12 ? 'PM' : 'AM'
+
+        return `${hour % 12 || 12}:${minute} ${period}`
+    }
+
     return (
         <div>
             <article className='border-2 rounded-md max-w-2xl mx-auto aspect-5/4 my-10'>
@@ -11,10 +32,10 @@ const ShowCard = ({ title, supportingbands, description, imageUrl, venue, city, 
                         <p className='text-s sm:text-base'>{description}</p>
 
                         <div className='pt-5'>
-                            <p className='text-s sm:text-base'> <span className='font-semibold'>Where:</span> {venue},</p>
+                            <p className='text-s sm:text-base'> <span className='font-semibold'>Where: </span>{venue},</p>
                             <p className='text-s sm:text-base pb-2'>{city}</p>
-                            <p className='text-s sm:text-base pb-2'><span className='font-semibold'>When:</span> {date}</p>
-                            <p className='text-s sm:text-base pb-2'><span className='font-semibold'>Time:</span> {time}</p>
+                            <p className='text-s sm:text-base pb-2'><span className='font-semibold'>When: </span>{formatDate(date)}</p>
+                            <p className='text-s sm:text-base pb-2'><span className='font-semibold'>Time: </span>{formatTime(time)} (local time)</p>
                             <p className='font-semibold'>{genre}</p>
                         </div>
                     </div>
@@ -41,3 +62,6 @@ const ShowCard = ({ title, supportingbands, description, imageUrl, venue, city, 
 }
 
 export default ShowCard
+
+
+//have it so people can add a link to buy tickets
