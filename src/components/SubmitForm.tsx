@@ -259,7 +259,7 @@ const SubmitForm = () => {
                             id="imageUrl"
                             name="imageUrl"
                             type="url"
-                            placeholder='Enter Image URL'
+                            placeholder='Enter Image URL (from another public website)'
                             value={form.imageUrl}
                             onChange={handleChange}
                             className='w-full text-s sm:text-base placeholder:text-black' />
