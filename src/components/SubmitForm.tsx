@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import type { ShowForm } from '@/types/show'
 
 const genres = ['Rock', 'Metal', 'Punk', 'Indie', 'Hip-Hop']
@@ -20,17 +20,15 @@ const SubmitForm = () => {
     const [imageError, setImageError] = useState<string>('')
     const [submitMessage, setSubmitMessage] = useState<string>('')
     const [preview, setPreview] = useState<string | null>(null)
+    const previewUrlRef = useRef<string | null>(null)
 
     useEffect(() => {
-        if (!form.imageFile) {
-            setPreview(null)
-            return
+        return () => {
+            if (previewUrlRef.current) {
+                URL.revokeObjectURL(previewUrlRef.current)
+            }
         }
-        const objectUrl = URL.createObjectURL(form.imageFile)
-        setPreview(objectUrl)
-
-        return () => URL.revokeObjectURL(objectUrl)
-    }, [form.imageFile])
+    }, [])
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         setForm({ ...form, [e.target.name]: e.target.value })
@@ -55,7 +53,14 @@ const SubmitForm = () => {
             return
         }
 
-        setForm({ ...form, imageFile: file })
+        if (previewUrlRef.current) {
+            URL.revokeObjectURL(previewUrlRef.current)
+        }
+
+        const objectUrl = URL.createObjectURL(file)
+        previewUrlRef.current = objectUrl
+        setPreview(objectUrl)
+        setForm((previousForm) => ({ ...previousForm, imageFile: file }))
         setImageError('')
     }
 
@@ -120,6 +125,12 @@ const SubmitForm = () => {
 
         setSubmitMessage('Show submitted for approval!\nShow will post in 24-48 hours.')
 
+        if (previewUrlRef.current) {
+            URL.revokeObjectURL(previewUrlRef.current)
+            previewUrlRef.current = null
+        }
+        setPreview(null)
+        
         formElement.reset()
         setForm({
             title: '',
