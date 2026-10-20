@@ -1,10 +1,10 @@
 'use client'
 
 import ShowCard from '@/components/ShowCard'
-import type { PendingShow } from '@/types/show'
+import type { ShowWithId } from '@/types/show'
 
 type PendingShowCardProps = {
-    show: PendingShow
+    show: ShowWithId
     onApprove: (id: string) => void | Promise<void>
     onReject: (id: string) => void
 }

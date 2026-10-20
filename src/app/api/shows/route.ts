@@ -22,8 +22,8 @@ export async function GET(request: Request) {
 			image_url AS "imageUrl",
 			venue,
 			city,
-			date,
-			time,
+			date::text AS date,
+			TO_CHAR(time, 'HH24:MI') AS time,
 			genre,
 			approved
 		FROM shows

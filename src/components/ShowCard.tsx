@@ -58,10 +58,10 @@ const ShowCard = ({ title, supportingbands, description, imageUrl, venue, city, 
                 </div>
             </article>
         </div>
-    )
-}
+    );
+};
 
-export default ShowCard
+export default ShowCard;
 
 
 //have it so people can add a link to buy tickets

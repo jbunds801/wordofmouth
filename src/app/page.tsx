@@ -15,7 +15,7 @@ export default async function Home() {
       image_url AS "imageUrl",
       venue,
       city,
-      TO_CHAR(date, 'YYYY-MM-DD') AS date,
+      date::text AS date,
       TO_CHAR(time, 'HH24:MI') AS time,
       genre
     FROM shows
