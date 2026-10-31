@@ -23,9 +23,15 @@ export default function AdminPage() {
             ((show) => show.id !== id)))
     }
 
-    const handleReject = (id: string) => {
-        // Will delete from Postgres later
-        setPendingShows(pendingShows.filter(show => show.id !== id))
+    const handleReject = async (id: string) => {
+        const response = await fetch(`/api/shows/${id}`, {
+            method: 'DELETE',
+        })
+
+        if (!response.ok) {
+            return
+        }
+        setPendingShows((shows) => shows.filter((show) => show.id !== id))
     }
 
     return (

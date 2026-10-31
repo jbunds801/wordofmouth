@@ -6,7 +6,7 @@ import type { ShowWithId } from '@/types/show'
 type PendingShowCardProps = {
     show: ShowWithId
     onApprove: (id: string) => void | Promise<void>
-    onReject: (id: string) => void
+    onReject: (id: string) => void | Promise<void>
 }
 
 export default function PendingShowCard({ show, onApprove, onReject }: PendingShowCardProps) {

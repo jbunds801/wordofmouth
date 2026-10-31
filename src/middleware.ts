@@ -1,26 +1,39 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export function middleware(req: NextRequest) {
-  const isPendingShowsRequest =
-    req.nextUrl.pathname === "/api/shows" &&
-    req.nextUrl.searchParams.get("approved") === "false";
+  const { pathname, searchParams } = req.nextUrl;
 
-  if (!req.nextUrl.pathname.startsWith("/admin") && !isPendingShowsRequest) {
+  const isPublicShowsRequest =
+    pathname === "/api/shows" &&
+    (req.method === "POST" ||
+      (req.method === "GET" && searchParams.get("approved") === "true"));
+
+  if (isPublicShowsRequest) {
     return NextResponse.next();
   }
 
   const authHeader = req.headers.get("authorization");
 
   if (authHeader) {
-    // Decode "Basic <base64(user:password)>"
-    const base64 = authHeader.split(" ")[1] || "";
-    const [user, password] = atob(base64).split(":");
+    try {
+      // Decode "Basic <base64(user:password)>"
+      const base64 = authHeader.split(" ")[1] || "";
+      const decoded = atob(base64);
+      const separator = decoded.indexOf(":");
+      const user = decoded.slice(0, separator);
+      const password = decoded.slice(separator + 1);
 
-    if (
-      user === process.env.ADMIN_USER &&
-      password === process.env.ADMIN_PASSWORD
-    ) {
-      return NextResponse.next();
+      if (
+        separator !== -1 &&
+        process.env.ADMIN_USER &&
+        process.env.ADMIN_PASSWORD &&
+        user === process.env.ADMIN_USER &&
+        password === process.env.ADMIN_PASSWORD
+      ) {
+        return NextResponse.next();
+      }
+    } catch {
+      // Malformed header falls through to the 401 response.
     }
   }
 

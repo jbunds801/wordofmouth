@@ -19,6 +19,7 @@ const SubmitForm = () => {
     })
     const [imageError, setImageError] = useState<string>('')
     const [submitMessage, setSubmitMessage] = useState<string>('')
+    const [isSubmitting, setIsSubmitting] = useState(false)
     const [preview, setPreview] = useState<string | null>(null)
     const previewUrlRef = useRef<string | null>(null)
 
@@ -73,7 +74,22 @@ const SubmitForm = () => {
 
     const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault()
+        if (isSubmitting) return
+
         const formElement = e.currentTarget
+        setSubmitMessage('')
+        setIsSubmitting(true)
+
+        try {
+            await submitShow(formElement)
+        } catch {
+            setImageError('Something went wrong. Please try again.')
+        } finally {
+            setIsSubmitting(false)
+        }
+    }
+
+    const submitShow = async (formElement: HTMLFormElement) => {
 
         if (!form.imageUrl && !form.imageFile) {
             setImageError('Add an image URL or drop an image file.')
@@ -162,7 +178,7 @@ const SubmitForm = () => {
                             required value={form.title}
                             onChange={handleChange}
                             className='w-full text-2xl sm:text-3xl font-extrabold 
-                            placeholder:font-extrabold placeholder:text-2xl placeholder:sm:text-3xl placeholder:text-black mb-1'
+                            placeholder:font-extrabold placeholder:text-2xl placeholder:sm:text-3xl mb-1'
                         />
                     </div>
 
@@ -176,7 +192,7 @@ const SubmitForm = () => {
                             value={form.supportingbands}
                             onChange={handleChange}
                             className='w-full text-l sm:text-xl font-semibold mb-3 
-                            placeholder:text-l placeholder:sm:text-xl placeholder:font-semibold placeholder:text-black'
+                            placeholder:text-l placeholder:sm:text-xl placeholder:font-semibold'
                         />
                     </div>
 
@@ -188,7 +204,7 @@ const SubmitForm = () => {
                             placeholder='Description'
                             value={form.description}
                             onChange={handleChange}
-                            className='w-full text-s sm:text-base placeholder:text-black'
+                            className='w-full text-s sm:text-base'
                         />
                     </div>
 
@@ -203,7 +219,7 @@ const SubmitForm = () => {
                                 required value={form.venue}
                                 onChange={handleChange}
                                 className='w-full text-s sm:text-base font-semibold
-                                placeholder:text-s placeholder:sm:text-base placeholder:font-semibold placeholder:text-black'
+                                placeholder:text-s placeholder:sm:text-base placeholder:font-semibold'
                             />
                         </div>
 
@@ -216,7 +232,7 @@ const SubmitForm = () => {
                                 placeholder='City'
                                 required value={form.city}
                                 onChange={handleChange}
-                                className='w-full text-s sm:text-base placeholder:text-black'
+                                className='w-full text-s sm:text-base'
                             />
                         </div>
 
@@ -296,14 +312,16 @@ const SubmitForm = () => {
                             placeholder='Enter Image URL (from another public website)'
                             value={form.imageUrl}
                             onChange={handleChange}
-                            className='w-full text-s sm:text-base placeholder:text-black' />
+                            className='w-full text-s sm:text-base' />
 
                     </div>
                 </div>
             </div>
 
             <div className='flex justify-end mx-3'>
-                <button type="submit" className='border-2 rounded-xl p-1 mb-3'>Submit</button>
+                <button type="submit" disabled={isSubmitting} className='border-2 rounded-xl p-1 mb-3 disabled:opacity-50'>
+                    {isSubmitting ? 'Submitting...' : 'Submit'}
+                </button>
             </div>
 
             <div className='flex justify-center'>
